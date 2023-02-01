@@ -11,7 +11,8 @@ class Burrows_Wheeler {
         int size;
     public:
         Burrows_Wheeler(string str);
-        void transform();
+        string transform();
+        string invert(string bwt);
 };
 
 #endif

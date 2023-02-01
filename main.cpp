@@ -3,7 +3,12 @@
 int main() {
     string s = "banana";
     Burrows_Wheeler bwt = Burrows_Wheeler(s);
-    bwt.transform();
+
+    string transformed = bwt.transform();
+    cout << transformed << endl;
+    
+    string original = bwt.invert(transformed);
+    cout << original << endl;
 
     return 0;
 }

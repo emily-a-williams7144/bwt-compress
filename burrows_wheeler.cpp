@@ -5,15 +5,13 @@ Burrows_Wheeler::Burrows_Wheeler(string str) {
     size = str.size() + 1;
 }
 
-void Burrows_Wheeler::transform() {
+string Burrows_Wheeler::transform() {
     input.append("$");
     int rotation = 1;
-    int i, k;
-    string temp1;
-    string temp2;
+    int i, k, compare;
+    string temp1, temp2, bwt;
     bool sorted;
     char temp[size];
-    int compare;
     char matrix[size][size];
 
     for (i = 0; i < size; i++) {
@@ -42,10 +40,13 @@ void Burrows_Wheeler::transform() {
         }
     } while (!sorted);
 
-    for (int i = 0; i < size; i++) {
-        for (int k = 0; k < size; k++) {
-            cout << matrix[i][k];
-        }
-        cout << endl;
+    for (k = 0; k < size; k++) {
+        bwt += matrix[size-1][k];
     }
+
+    return bwt;
+}
+
+string Burrows_Wheeler::invert(string bwt) {
+    return bwt;
 }
