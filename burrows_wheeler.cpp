@@ -24,8 +24,8 @@ string Burrows_Wheeler::transform() {
     do {
         sorted = 1;
         for (i = 1; i < size; i++) {
-            temp1 += matrix[i];
-            temp2 += matrix[i-1];
+            temp1 = matrix[i];
+            temp2 = matrix[i-1];
             compare = temp2.compare(temp1);
             if (compare > 0) {
                 for (k = 0; k < size; k++) {
@@ -35,8 +35,6 @@ string Burrows_Wheeler::transform() {
                 }
                 sorted = 0;
             }
-            temp1.clear();
-            temp2.clear();
         }
     } while (!sorted);
 
@@ -48,5 +46,40 @@ string Burrows_Wheeler::transform() {
 }
 
 string Burrows_Wheeler::invert(string bwt) {
+    int rotation = 1;
+    char matrix[size][size];
+    int i, k, compare;
+    string temp1, temp2;
+    bool sorted;
+    char temp[size];
+
+    for (i = 0; i < size; i++) {
+        for (k = 0; k < size; k++) {
+            matrix[i][(k+rotation)%size] = input[k];
+        }
+        rotation++;
+    }
+
+    do {
+        sorted = 1;
+        for (i = 1; i < size; i++) {
+            temp1 = matrix[i];
+            temp2 = matrix[i-1];
+            compare = temp2.compare(temp1);
+            if (compare > 0) {
+                for (k = 0; k < size; k++) {
+                    temp[k] = matrix[i][k];
+                    matrix[i][k] = matrix[i-1][k];
+                    matrix[i-1][k] = temp[k];
+                }
+                sorted = 0;
+            }
+        }
+    } while (!sorted);
+
+    for (i = 0; i < size; i++) {
+
+    }
+
     return bwt;
 }
