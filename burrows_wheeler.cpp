@@ -4,7 +4,7 @@ string transform(string input) {
     input.append("$");
     string bwt, copy = input;
     int size = input.size();
-    int i, j, k = 0;
+    int i;
     list<string> table;
     list<int> LF;
 
