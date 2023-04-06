@@ -2,17 +2,13 @@
 #define BURROWS_WHEELER_H
 
 #include <string>
+#include <list>
 #include <iostream>
+#include <map>
+#include <algorithm>
 using namespace std;
 
-class Burrows_Wheeler {
-    private:
-        string input;
-        int size;
-    public:
-        Burrows_Wheeler(string str);
-        string transform();
-        string invert(string bwt);
-};
+string transform(string input);
+string invert(string bwt);
 
 #endif
