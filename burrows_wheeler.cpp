@@ -1,85 +1,54 @@
 #include "burrows_wheeler.h"
 
-Burrows_Wheeler::Burrows_Wheeler(string str) {
-    input = str;
-    size = str.size() + 1;
-}
-
-string Burrows_Wheeler::transform() {
+string transform(string input) {
     input.append("$");
-    int rotation = 1;
-    int i, k, compare;
-    string temp1, temp2, bwt;
-    bool sorted;
-    char temp[size];
-    char matrix[size][size];
+    string bwt, copy = input;
+    int size = input.size();
+    int i, j, k = 0;
+    list<string> table;
+    list<int> LF;
 
     for (i = 0; i < size; i++) {
-        for (k = 0; k < size; k++) {
-            matrix[i][(k+rotation)%size] = input[k];
-        }
-        rotation++;
+        table.push_back(copy);
+        copy.erase(0,1);
+    }
+    table.sort();
+
+    for (string s : table) {
+        LF.push_back(size - s.size());
     }
 
-    do {
-        sorted = 1;
-        for (i = 1; i < size; i++) {
-            temp1 = matrix[i];
-            temp2 = matrix[i-1];
-            compare = temp2.compare(temp1);
-            if (compare > 0) {
-                for (k = 0; k < size; k++) {
-                    temp[k] = matrix[i][k];
-                    matrix[i][k] = matrix[i-1][k];
-                    matrix[i-1][k] = temp[k];
-                }
-                sorted = 0;
-            }
-        }
-    } while (!sorted);
-
-    for (k = 0; k < size; k++) {
-        bwt += matrix[size-1][k];
+    for (int j : LF) {
+        if (j == 0) bwt += input[size-1];
+        else bwt += input[j-1];
     }
 
     return bwt;
 }
 
-string Burrows_Wheeler::invert(string bwt) {
-    int rotation = 1;
-    char matrix[size][size];
-    int i, k, compare;
-    string temp1, temp2;
-    bool sorted;
-    char temp[size];
+string invert(string bwt) {
+    string original, sorted = bwt;
+    int i, j, count = 0, size = bwt.size();
+    map<char, int> occurrence;
+    map<char, int> char_count;
+    list<int> LF;
+
+    sort(sorted.begin(), sorted.end());
 
     for (i = 0; i < size; i++) {
-        for (k = 0; k < size; k++) {
-            matrix[i][(k+rotation)%size] = input[k];
-        }
-        rotation++;
+        if (i == 0) char_count[sorted[i]] = count;
+        else if (sorted[i] != sorted[i-1]) char_count[sorted[i]] = count;
+        count++; 
     }
 
-    do {
-        sorted = 1;
-        for (i = 1; i < size; i++) {
-            temp1 = matrix[i];
-            temp2 = matrix[i-1];
-            compare = temp2.compare(temp1);
-            if (compare > 0) {
-                for (k = 0; k < size; k++) {
-                    temp[k] = matrix[i][k];
-                    matrix[i][k] = matrix[i-1][k];
-                    matrix[i-1][k] = temp[k];
-                }
-                sorted = 0;
-            }
-        }
-    } while (!sorted);
-
-    for (i = 0; i < size; i++) {
-
+    for (j = 0; j < size; j++) {
+        occurrence[bwt[j]] += 1;
+        LF.push_front(char_count[bwt[j]] + occurrence[bwt[j]]);
     }
 
-    return bwt;
+    for (int k : LF) {
+        if (bwt[size-k] != '$') original += bwt[size-k];
+    }
+
+    return original;
 }
